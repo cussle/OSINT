@@ -1,0 +1,93 @@
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+/* 헤더 스타일 */
+h1 {
+    color: #007bff;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* 검색창 스타일 */
+form {
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 10px;
+    width: 280px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 컨테이너 (결과 + 지도) */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 25px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 결과 박스 스타일 */
+.result-box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: left;
+    width: 48%;
+    min-width: 350px;
+    transition: transform 0.2s;
+}
+
+.result-box:hover {
+    transform: translateY(-5px);
+}
+
+/* 🗺️ 지도 스타일 */
+#map {
+    height: 420px;
+    width: 48%;
+    min-width: 350px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 반응형 스타일 (화면이 작아질 때 세로 정렬) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .result-box,
+    #map {
+        width: 90%;
+    }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OUT OF SITE</title>
+
+    <!-- 🌐 외부 CSS 파일 불러오기 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- 지도 라이브러리 -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+</head>
+<body>
+    <h1>🌍 G O O S E</h1>
+    <h2> GET OUT OF SITE</h2>
+
+    <form method="POST">
+        <input type="text" name="domain" placeholder="도메인 입력 (예: naver.com)" required>
+        <button type="submit">🔍 조회</button>
+    </form>
+
+    {% if data %}
+    <!-- 📌 정보 + 지도 컨테이너 -->
+    <div class="container">
+        <!-- 도메인 분석 결과 -->
+        <div class="result-box">
+            <h2>📡 도메인 분석 결과</h2>
+            <p>🌐 <strong>도메인:</strong> {{ data["도메인"] }}</p>
+            <p>🌍 <strong>등록국가:</strong> {{ data["등록국가"] }}</p>
+            <p>🏢 <strong>등록기관:</strong> {{ data["등록기관"] }}</p>
+            <p>📌 <strong>도메인 연령:</strong> {{ data["도메인 연령"] }}</p>
+            <p>📏 <strong>등록 기간:</strong> {{ data["등록 기간"] }}</p>
+            <p>🔒 <strong>개인정보 보호:</strong> {{ data["개인정보 보호 여부"] }}</p>
+            <p>📧 <strong>이메일:</strong> {{ data["이메일"] }}</p>
+            <p>📍 <strong>주소:</strong> {{ data["주소"] }}</p>
+
+            <h3>🔗 네트워크 정보</h3>
+            <p>🌐 <strong>IP 주소:</strong> {{ data["IP 주소"] }}</p>
+
+            <h3>🔍 DNS 정보</h3>
+            <p>📌 <strong>A 레코드:</strong> {{ data["A 레코드"] }}</p>
+            <p>📌 <strong>MX 레코드:</strong></p>
+            <ul>
+                {% for mx in data["MX 레코드"] %}
+                    <li>{{ mx }}</li>
+                {% endfor %}
+            </ul>
+            <p>📌 <strong>네임서버:</strong></p>
+            <ul>
+                {% for ns in data["네임서버"] %}
+                    <li>{{ ns }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 🗺️ 지도 -->
+        <div id="map"></div>
+    </div>
+
+    <script>
+        // 지도 생성
+        var map = L.map('map').setView([20, 0], 2); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18
+        }).addTo(map);
+
+        {% if data and data["위도"] is not none and data["경도"] is not none %}
+            var latitude = "{{ data["위도"] | default(0) }}";
+            var longitude = "{{ data["경도"] | default(0) }}";
+            var domain = "{{ data['도메인'] }}";
+            var country = "{{ data['등록국가'] }}";
+
+            console.log("📌 지도 데이터:", latitude, longitude, domain, country);
+
+            // 🛠️ 문자열을 숫자로 변환
+            latitude = parseFloat(latitude);
+            longitude = parseFloat(longitude);
+
+            if (!isNaN(latitude) && !isNaN(longitude) && latitude !== 0 && longitude !== 0) {
+                var marker = L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup(domain + " - " + country).openPopup();
+
+                map.setView([latitude, longitude], 4);
+            } else {
+                console.warn("🚨 위도/경도가 유효하지 않음:", latitude, longitude);
+            }
+        {% endif %}
+    </script>
+    {% endif %}
+
+</body>
+</html>
